@@ -1,44 +1,29 @@
-**English** | [中文](https://p3terx.com/archives/build-openwrt-with-github-actions.html)
+固件特点及说明:
 
-# Actions-OpenWrt
+1.所有源码来自lean的源码仓库:https://github.com/coolsnowwolf/lede
 
-[![LICENSE](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square&label=LICENSE)](https://github.com/P3TERX/Actions-OpenWrt/blob/master/LICENSE)
-![GitHub Stars](https://img.shields.io/github/stars/P3TERX/Actions-OpenWrt.svg?style=flat-square&label=Stars&logo=github)
-![GitHub Forks](https://img.shields.io/github/forks/P3TERX/Actions-OpenWrt.svg?style=flat-square&label=Forks&logo=github)
+2.固件默认eth0地址:192.168.120.1
 
-A template for building OpenWrt with GitHub Actions
+3.无WEB服务，默认开启SSH服务，管理需用SSH或TTL
 
-## Usage
+4.固件带x819无线驱动，默认开启，可在命令行下运行 "wlan 你的SSID 你的密码" 配置无线
 
-- Click the [Use this template](https://github.com/P3TERX/Actions-OpenWrt/generate) button to create a new repository.
-- Generate `.config` files using [Lean's OpenWrt](https://github.com/coolsnowwolf/lede) source code. ( You can change it through environment variables in the workflow file. )
-- Push `.config` file to the GitHub repository.
-- Select `Build OpenWrt` on the Actions page.
-- Click the `Run workflow` button.
-- When the build is complete, click the `Artifacts` button in the upper right corner of the Actions page to download the binaries.
+5.固件集成PPTP,VXLAN,N2N,GRE等服务，专为异地组网定制
 
-## Tips
+6.spiflash版需要硬改16M spiflash（型号仅测试w25q128，需要的自行测试），SD卡版Uboot中集成了SPIflash的驱动，可以在Uboot中烧写SPIflash（需要在电脑上搭建tftp服务器，用于上传文件，当然也可以用NFS服务器；如果有NFS服务器，2M的spiflash无法运行本固件）
 
-- It may take a long time to create a `.config` file and build the OpenWrt firmware. Thus, before create repository to build your own firmware, you may check out if others have already built it which meet your needs by simply [search `Actions-Openwrt` in GitHub](https://github.com/search?q=Actions-openwrt).
-- Add some meta info of your built firmware (such as firmware architecture and installed packages) to your repository introduction, this will save others' time.
+7.uboot用tftp需要设置客户端和服务器ip，然后在上传文件到内存，例如:
 
-## Credits
+setenv ipaddr 192.168.1.101
 
-- [Microsoft Azure](https://azure.microsoft.com)
-- [GitHub Actions](https://github.com/features/actions)
-- [OpenWrt](https://github.com/openwrt/openwrt)
-- [Lean's OpenWrt](https://github.com/coolsnowwolf/lede)
-- [tmate](https://github.com/tmate-io/tmate)
-- [mxschmitt/action-tmate](https://github.com/mxschmitt/action-tmate)
-- [csexton/debugger-action](https://github.com/csexton/debugger-action)
-- [Cowtransfer](https://cowtransfer.com)
-- [WeTransfer](https://wetransfer.com/)
-- [Mikubill/transfer](https://github.com/Mikubill/transfer)
-- [softprops/action-gh-release](https://github.com/softprops/action-gh-release)
-- [ActionsRML/delete-workflow-runs](https://github.com/ActionsRML/delete-workflow-runs)
-- [dev-drprasad/delete-older-releases](https://github.com/dev-drprasad/delete-older-releases)
-- [peter-evans/repository-dispatch](https://github.com/peter-evans/repository-dispatch)
+setenv serverip 192.168.1.100
 
-## License
+tftp 42000000 gateway-spi.bin
 
-[MIT](https://github.com/P3TERX/Actions-OpenWrt/blob/main/LICENSE) © [**P3TERX**](https://p3terx.com)
+spiflash烧写前需要先输入：sf probe
+
+然后烧录：sf update 42000000 0 1000000
+
+8.spiflash版首次运行时要在终端输入：firstboot
+
+然后再输入：mount -t jffs2 /dev/mtdblock5 /mnt
