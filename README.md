@@ -10,7 +10,7 @@
 
 5.固件集成PPTP,VXLAN,N2N,GRE等服务，专为异地组网定制
 
-6.spiflash版需要硬改16M spiflash（型号仅测试w25q128，需要的自行测试），SD卡版Uboot中集成了SPIflash的驱动，可以在Uboot中烧写SPIflash（需要在电脑上搭建tftp服务器，用于上传文件，当然也可以用NFS服务器；如果有NFS服务器，2M的spiflash无法运行本固件）
+6.spiflash版需要硬改16M spiflash（型号仅测试w25q128，需要的自行测试，2M的spiflash无法运行本固件），SD卡版Uboot中集成了SPIflash的驱动，可以在Uboot中烧写SPIflash（需要在电脑上搭建tftp服务器，用于上传文件）
 
 7.uboot用tftp需要设置客户端和服务器ip，然后在上传文件到内存，例如:
 
